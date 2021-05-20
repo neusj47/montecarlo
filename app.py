@@ -92,7 +92,8 @@ app.layout = html.Div([
     dcc.Graph(
         style={'height': 600},
         id='my-graph'
-    )
+    ),
+    dcc.Graph(id='my-graph2', figure={}, clickData=None, hoverData=None)
 ])
 
 
@@ -153,8 +154,26 @@ def update_graph(start_date, end_date):
         df.iloc[0:len(df)] = round(df.iloc[0:len(df)], 2)
         return df
     df= get_montsimul_result(start_date, end_date)
-    fig = px.scatter(data_frame=df, x='Risk', y='Return', title='MonteCarlo Simulation')
+    fig = px.scatter(data_frame=df, x='Risk', y='Return', title='MonteCarlo Simulation', custom_data=['AAPL', 'TSLA', 'MSFT', 'AMZN'])
     return fig
+
+# TICKER별 wgt 데이터 업데이트
+@app.callback(
+    Output(component_id='my-graph2', component_property='figure'),
+    Input(component_id='my-graph', component_property='hoverData')
+)
+def update_side_graph(hov_data):
+    if hov_data is None:
+        fig = px.pie(title=f'AAPL:TSLA:MSFT:AMZN')
+        return fig
+    else :
+        hov = hov_data['points'][0]['customdata']
+        fig2 = px.pie(title=f'AAPL:TSLA:MSFT:AMZN : {hov}')
+        return fig2
+
+
+
+
 
 if __name__ == "__main__":
     app.run_server(debug=True, port=8060)
