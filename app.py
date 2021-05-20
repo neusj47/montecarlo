@@ -97,7 +97,6 @@ app.layout = html.Div([
 ])
 
 
-
 @app.callback(
     Output('my-graph', 'figure'),
     [Input('my-date-picker-range', 'start_date'),
@@ -157,7 +156,7 @@ def update_graph(start_date, end_date):
     fig = px.scatter(data_frame=df, x='Risk', y='Return', title='MonteCarlo Simulation', custom_data=['AAPL', 'TSLA', 'MSFT', 'AMZN'])
     return fig
 
-# TICKER별 wgt 데이터 업데이트
+# TICKER별 wgt 업데이트
 @app.callback(
     Output(component_id='my-graph2', component_property='figure'),
     Input(component_id='my-graph', component_property='hoverData')
